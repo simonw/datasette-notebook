@@ -31,6 +31,6 @@ setup(
     install_requires=["datasette", "sqlite-utils", "markdown", "bleach"],
     extras_require={"test": ["pytest", "pytest-asyncio"]},
     tests_require=["datasette-notebook[test]"],
-    package_data={"datasette_notebook": ["static/*", "templates/*"]},
+    package_data={"datasette_notebook": ["static/*", "templates/*/*"]},
     python_requires=">=3.6",
 )
