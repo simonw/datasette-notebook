@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}{{ slug }}{% endblock %}
+
+{% block extra_head %}
+<style>
+.markdown ul {
+  margin-bottom: 0.8rem;
+  padding-left: 1.25rem;
+}
+.markdown ul li {
+	list-style-type: disc;
+}
+summary {
+  cursor: pointer;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<h1>{{ slug or "Index" }}</h1>
+<div class="markdown">
+{{ rendered }}
+</div>
+
+{% if children %}
+<ul class="bullets">
+  {% for child in children %}
+  <li><a href="/n/{{ child.slug }}">{{ child.slug }}</a></li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+<details style="margin-top: 2em"><summary>Edit this page</summary>
+  <form action="" method="POST">
+    <p>
+      <input type="hidden" name="csrftoken" value="{{ csrftoken() }}">
+      <textarea style="width: 90%; height: 20em" name="content">{{ content }}</textarea>
+    </p>
+    <p><input type="submit" value="Save"></p>
+  </form>
+</details>
+
+{% endblock %}
