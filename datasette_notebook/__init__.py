@@ -1,4 +1,4 @@
-from datasette.utils.asgi import Response
+from datasette.utils.asgi import Response, NotFound
 from datasette import hookimpl
 import sqlite_utils
 from .utils import render_markdown
@@ -8,9 +8,8 @@ from .utils import render_markdown
 def startup(datasette):
     # Create tables for notebook DB if needed
     db_name = config_notebook(datasette)
-    assert (
-        db_name in datasette.databases
-    ), "datasette-notebook needs a '{}' database to start".format(db_name)
+    if db_name not in datasette.databases:
+        return
 
     def create_tables(conn):
         db = sqlite_utils.Database(conn)
@@ -34,7 +33,10 @@ def startup(datasette):
 async def notebook(request, datasette):
     slug = request.url_vars.get("slug") or ""
     db_name = config_notebook(datasette)
-    db = datasette.get_database(db_name)
+    try:
+        db = datasette.get_database(db_name)
+    except KeyError:
+        raise NotFound("Could not find database: {}".format(db_name))
 
     if request.method == "POST":
         vars = await request.post_vars()
