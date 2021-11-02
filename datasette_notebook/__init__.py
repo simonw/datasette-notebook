@@ -77,7 +77,7 @@ async def notebook(request, datasette):
             {
                 "slug": slug,
                 "content": row["content"],
-                "rendered": render_markdown(row["content"]),
+                "rendered": render_markdown(row["content"], datasette),
                 "children": children.rows,
             },
             request=request,

@@ -17,22 +17,29 @@ Install this plugin in the same environment as Datasette.
 
 ## Usage
 
-With this plugin you must either run Datasette with a file called `notebook.db`:
+Start Datasette with a SQLite file called `notebook.db`:
 
     datasette notebook.db --create
 
 Here the `--create` option will create that file if it does not yet exist.
 
-Or you can use some other file name and configure that using `metadata.yml`:
+Visit `/n` to create an index page. Visit `/n/name` to create a page with that name.
+
+You can link to other pages using `[[WikiLink]]` syntax. This will create a link to `/n/WikiLink` - spaces will be converted to underscores, and you can link to nested pages such as `[[nested/page]]`.
+
+## Configuration
+
+You can use a file other than `notebook.db` by configuring it using `metadata.yml`. To use a database file called `otherfile.db` you would use this:
 
 ```yaml
 plugins:
   datasette-notebook:
     database: otherfile
 ```
-Then run Datasette with `otherfile.db`.
+Then start Datasette like so:
 
-Visit `/n` to create an index page. Visit `/n/name` to create a page with that name.
+    datasette otherfile.db
+
 
 ## Development
 
