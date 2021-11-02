@@ -19,3 +19,21 @@ async def test_successful_startup(tmpdir):
     await datasette.invoke_startup()
     response = await datasette.client.get("/n")
     assert response.status_code == 200
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("enabled", (True, False))
+async def test_menu_link(tmpdir, enabled):
+    files = []
+    if enabled:
+        notebook_db = str(tmpdir / "notebook.db")
+        sqlite3.connect(notebook_db).execute("vacuum")
+        files = [notebook_db]
+    datasette = Datasette(files)
+    response = await datasette.client.get("/")
+    assert response.status_code == 200
+    fragment = '<li><a href="/n">Notebook</a></li>'
+    if enabled:
+        assert fragment in response.text
+    else:
+        assert fragment not in response.text

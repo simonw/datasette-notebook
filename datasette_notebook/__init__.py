@@ -90,6 +90,15 @@ def register_routes():
     return [(r"^/n$", notebook), (r"^/n/(?P<slug>.*)$", notebook)]
 
 
+@hookimpl
+def menu_links(datasette):
+    db_name = config_notebook(datasette)
+    if db_name in datasette.databases:
+        return [
+            {"href": datasette.urls.path("/n"), "label": "Notebook"},
+        ]
+
+
 def config_notebook(datasette):
     config = datasette.plugin_config("datasette-notebook") or {}
     return config.get("database") or "notebook"
